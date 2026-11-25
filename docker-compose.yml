@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    ports: ["3000:3000"]
+    env_file: .env
+    depends_on: [db]
+    restart: unless-stopped
+  factory-worker:
+    build: .
+    command: ["npm", "run", "worker:factory"]
+    env_file: .env
+    environment:
+      FACTORY_WORKER_CONCURRENCY: ${FACTORY_WORKER_CONCURRENCY:-2}
+      FACTORY_WORKER_POLL_MS: ${FACTORY_WORKER_POLL_MS:-2000}
+    depends_on: [db]
+    restart: unless-stopped
+    stop_grace_period: 90s
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: freetoolforge
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: ["5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+volumes:
+  postgres_data:

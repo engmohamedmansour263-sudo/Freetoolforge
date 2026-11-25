@@ -1,0 +1,4 @@
+import Link from 'next/link';
+import { headers } from 'next/headers';
+import { getMessages, isLocale } from '@/lib/i18n';
+export default async function SiteFooter() { const raw=(await headers()).get('x-locale')||'en'; const t=getMessages(isLocale(raw)?raw:'en'); return <footer className="footer"><div className="container footer-inner"><div><Link href="/" className="brand">✦ FreeToolForge</Link><p className="muted">{t.footer.tagline}</p></div><div className="footer-links"><Link href="/tools">{t.footer.allTools}</Link><Link href="/seo-guides">{raw === 'ar' ? 'دليل الأدوات' : raw === 'hi' ? 'टूल गाइड' : raw === 'bn' ? 'টুল গাইড' : 'Tool guides'}</Link><Link href="/templates">{t.nav.templates}</Link><Link href="/about">{t.nav.about}</Link><Link href="/privacy-policy">{t.footer.privacy}</Link><Link href="/terms">{t.footer.terms}</Link></div><small>© {new Date().getFullYear()} FreeToolForge</small></div></footer>; }
